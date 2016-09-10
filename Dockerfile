@@ -13,11 +13,14 @@ RUN /sbin/my_init -- apt-get install -y clang-3.8
 ENV CXX="clang++-3.8"
 ENV CC="clang-3.8"
 
-RUN mkdir /work
+RUN mkdir /work && chmod 777 /work
 RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
 RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
 RUN update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+
+COPY afl /home/afl
+RUN cd /home/afl && make install && make clean  &&  chmod 777 /home/afl
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
