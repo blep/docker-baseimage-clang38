@@ -3,12 +3,13 @@
 
 # Use phusion/baseimage as base image. 
 # See https://github.com/phusion/baseimage-docker for more details
-FROM cmake3:latest
+#FROM cmake3:latest
+FROM blep/docker-baseimage-cmake3:0.2.0
 
 RUN apt-get update
 # clang-3.8
-# /usr/bin/clang-3.8: 432MB -> 795.9MB
-RUN /sbin/my_init -- apt-get install -y clang-3.8
+# /usr/bin/clang-3.8: 338.5 MB -> 602.5 MB
+RUN /sbin/my_init -- apt-get install -y --no-install-recommends clang-3.8
 
 ENV CXX="clang++-3.8"
 ENV CC="clang-3.8"
@@ -24,3 +25,5 @@ RUN cd /home/afl && make install && make clean  &&  chmod 777 /home/afl
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+WORKDIR /work
